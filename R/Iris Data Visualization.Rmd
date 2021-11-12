@@ -1,0 +1,63 @@
+---
+title: "iris Dataset with interactivity"
+output: html_notebook
+---
+I] Arrange Data
+```{r}
+duplicated(iris)
+class(iris$Species)
+iris$Species[1:5]
+```
+```{r}
+# Mean & Standard Deviation
+library(DT)
+new_iris <- iris %>% group_by(Species) %>% summarise(Avg_Sepal_Length = mean(Sepal.Length), SD_Sepal_Length = sd(Sepal.Length), Avg_Sepal_Width = mean(Sepal.Width), SD_Sepal_Width = sd(Sepal.Width), Avg_Petal_Length = mean(Petal.Length), SD_Petal_Length = sd(Petal.Length), Avg_Petal_Width = mean(Petal.Width), SD_Petal_Width = sd(Petal.Width))
+datatable(new_iris, caption = "Mean & Standard Deviation") %>% formatRound(2:5, digits = 2)
+```
+II] Arrange Table
+```{r}
+library(ggplot2)
+library(plotly)
+library(dplyr)
+head(iris, 10)
+count(iris, Species)
+```
+```{r}
+# Scatter Plot
+p1 <- ggplot(iris, aes(x = Sepal.Length, y = Petal.Length, color = Species, shape = Species)) + geom_point(size = 3) + ggtitle('Petal Length vs Sepal Length') + geom_smooth(method = 'lm')
+ggplotly(p1)
+```
+```{r}
+# Generalized Pair Plot
+library(GGally)
+p2 <- ggpairs(iris, columns = 1:4, aes(color = Species)) + ggtitle("Anderson's Iris Dataset --- 3 Species")
+p2
+p3 <- pairs(iris[1:4], lower.panel = NULL, main = "Anderson's Iris Data -- 3 species", pch = 21, bg = c("red", "green3", "blue")[unclass(iris$Species)])
+p3
+```
+```{r}
+# Parallel Coordinate Plot
+p4 <- ggparcoord(data = iris, columns = 1:4, groupColumn = "Species")
+ggplotly(p4)
+```
+III] Other Plots 
+```{r}
+# Histogram
+p5 <- ggplot(data = iris, aes(x = Sepal.Length)) + geom_histogram(binwidth = 0.2, color="black", aes(fill = Species)) + xlab("Sepal Length") + ylab("Frequency") + ggtitle("Histogram of Sepal Length") + geom_vline(data = iris, aes(xintercept = mean(Sepal.Length)), linetype = "dashed", color="grey")
+ggplotly(p5)
+```
+```{r}
+# Density Plot
+p6 <- ggplot(iris, aes(x = Sepal.Width, colour = Species, fill = Species)) + geom_density(alpha = .5) + geom_vline(aes(xintercept = mean(Sepal.Width)), linetype = "dashed", color = "grey", size = 1) + xlab("Sepal Width") + ylab("Density")
+ggplotly(p6)
+```
+```{r}
+# Box Plot
+p7 <- ggplot(iris, aes(Species, Petal.Length, fill = Species)) + geom_boxplot() + scale_y_continuous("Petal Length", breaks = seq(0, 10, by = .5)) + labs(title = "Iris Petal Length Box Plot", x = "Species")
+ggplotly(p7)
+```
+```{r}
+# Violin Plot
+p8 <- ggplot(iris, aes(Species, Petal.Width, fill = Species)) + scale_y_continuous("Petal Width", breaks = seq(0, 10, by = .5)) + labs(title = "Iris Petal Width Violin Plot", x = "Species") + geom_violin(aes(color = Species), alpha = .75)
+ggplotly(p8)
+```
