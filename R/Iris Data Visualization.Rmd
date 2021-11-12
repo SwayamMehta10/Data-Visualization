@@ -9,7 +9,16 @@ class(iris$Species)
 iris$Species[1:5]
 ```
 ```{r}
-# Mean & Standard Deviation
+# Cleaning Data
+# Mutate
+mutate(iris, aspect_ration = Petal.Width/Petal.Length)
+
+# Aggregate
+aggregate(Sepal.Length ~ Species, data = iris, FUN = 'mean')
+aggregate(Sepal.Length ~ Species, data = iris, FUN = 'length')
+aggregate(Species ~ Sepal.Length, data = iris, FUN = 'length')
+
+# Group by & Summarize
 library(DT)
 new_iris <- iris %>% group_by(Species) %>% summarise(Avg_Sepal_Length = mean(Sepal.Length), SD_Sepal_Length = sd(Sepal.Length), Avg_Sepal_Width = mean(Sepal.Width), SD_Sepal_Width = sd(Sepal.Width), Avg_Petal_Length = mean(Petal.Length), SD_Petal_Length = sd(Petal.Length), Avg_Petal_Width = mean(Petal.Width), SD_Petal_Width = sd(Petal.Width))
 datatable(new_iris, caption = "Mean & Standard Deviation") %>% formatRound(2:5, digits = 2)
