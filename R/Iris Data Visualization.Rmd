@@ -11,7 +11,11 @@ iris$Species[1:5]
 ```{r}
 # Cleaning Data
 # Mutate
+library(dplyr)
 mutate(iris, aspect_ration = Petal.Width/Petal.Length)
+
+# Subset
+subset(iris, Sepal.Length > 7)
 
 # Aggregate
 aggregate(Sepal.Length ~ Species, data = iris, FUN = 'mean')
@@ -27,7 +31,6 @@ II] Arrange Table
 ```{r}
 library(ggplot2)
 library(plotly)
-library(dplyr)
 head(iris, 10)
 count(iris, Species)
 ```

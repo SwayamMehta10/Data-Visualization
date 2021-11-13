@@ -1,0 +1,115 @@
+---
+title: "Spatial Data & Circular Plots"
+output: html_notebook
+---
+```{r}
+library(ggplot2)
+library(dplyr)
+library(plotly)
+head(state.x77)
+nrow(state.x77)
+head(state.abb)
+```
+```{r}
+states_map <- map_data("state")
+head(states_map)
+
+states <- as.data.frame(state.x77)
+states$region <- tolower(rownames(states))
+head(states)
+```
+```{r}
+fact_join <- left_join(states_map, states, by = "region")
+
+p1 <- ggplot(fact_join, aes(long, lat, group = group)) + geom_polygon(aes(fill = Population), color = "white") + scale_fill_viridis_c(option = "C") + theme_classic()
+
+ggplotly(p1)
+```
+```{r}
+library(cartography)
+library(sp)
+data("nuts2006")
+summary(nuts2.spdf)
+head(nuts2.df)
+
+p2 <- plot(nuts0.spdf, border = NA, col = NA, bg = "#A6CAE0")
+p2 <- p2 + plot(world.spdf, border = NA, col = "#E3DEBF", add = TRUE)
+p2 <- p2 + plot(nuts0.spdf, border = "grey80", col = "#D1914D", add = TRUE)
+
+p2 <- p2 + propSymbolsLayer(spdf = nuts0.spdf, df = nuts0.df, var = "pop2008", symbols = "circle", col = "#920000", legend.pos = "right", legend.title.txt = "Total\npopulation (2008)", legend.style = "c")
+
+p2 <- p2 + layoutLayer(title = "European Countries Population", author = "cartography", sources = "Eurostat, 2008", scale = NULL, south = TRUE)
+
+p2
+```
+```{r}
+library(geofacet)
+head(state_ranks)
+
+p3 <- ggplot(state_ranks, aes(variable, rank, fill = variable)) + geom_col() + coord_flip() + theme_bw() + facet_geo(~state, grid = "us_state_grid2")
+
+p3
+```
+```{r}
+library(statebins)
+library(tidyverse)
+data("USArrests")
+head(USArrests)
+
+USArrests$state <- rownames(USArrests)
+
+p4 <- statebins(USArrests, value_col = "Assault", name = "Assault") + theme_statebins(legend_position = "right")
+
+p4
+```
+```{r}
+rect <- data.frame(x = 50, y = 50)
+line <- data.frame(x = c(1, 200), y = c(100, 1))
+
+p5 <- ggplot(mapping = aes(x, y)) + geom_tile(data = rect, aes(width = 50, height = 50)) + geom_line(data = line)
+
+p5 + coord_polar("x")
+p5 + coord_polar("y")
+```
+```{r}
+head(mtcars)
+
+p6 <- ggplot(mtcars, aes(x = "", fill = factor(carb))) + geom_bar(width = 1)
+
+ggplotly(p6)
+p6 + coord_polar()
+p6 + coord_polar(theta = "y")
+```
+```{r}
+p7 <- ggplot(mtcars, aes(x = factor(cyl), fill = factor(cyl))) + geom_bar(width = 1, color = "black")
+
+ggplotly(p7)
+p7 + coord_polar()
+p7 + coord_polar(theta = "y")
+```
+```{r}
+head(diamonds)
+
+p8 <- ggplot(diamonds, aes(x = "", fill = color)) + geom_bar(width = 1)
+
+ggplotly(p8)
+p8 + coord_polar()
+p8 + coord_polar(theta = "y")
+```
+```{r}
+p9 <- ggplot(diamonds, aes(x = clarity, fill = cut)) + geom_bar(width = 1)
+
+ggplotly(p9)
+p9 + coord_polar()
+p9 + coord_polar(theta = "y")
+```
+```{r}
+library(gcookbook)
+head(wind)
+
+p10 <- ggplot(wind, aes(x = DirCat, fill = SpeedCat)) + geom_histogram(binwidth = 15, boundary = -7.5)
+
+ggplotly(p10)
+p10 + coord_polar()
+p10 + coord_polar(theta = "y")
+```
