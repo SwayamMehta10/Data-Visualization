@@ -4,9 +4,9 @@ output: html_notebook
 ---
 I] Arrange Data
 ```{r}
-duplicated(iris)
 class(iris$Species)
 iris$Species[1:5]
+duplicated(iris)
 ```
 ```{r}
 # Cleaning Data
